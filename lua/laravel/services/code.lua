@@ -4,7 +4,8 @@ local Error = require("laravel.utils.error")
 local md5 = require("laravel.utils.md5")
 local app = require("laravel.core.app")
 
-local dir = "vendor/nvim-laravel/"
+local vendor_dir = "vendor"
+local dir = vendor_dir .. "/nvim-laravel/"
 
 ---@class laravel.services.code
 ---@field api laravel.services.api
@@ -86,6 +87,13 @@ function codeService:make_php_file(code, template)
   local full = dir .. fname
   local _, file_stats = nio.uv.fs_stat(full)
   if not (file_stats and file_stats.size > 0) then
+    local _, vendor_dir_stats = nio.uv.fs_stat(vendor_dir)
+    if not vendor_dir_stats then
+      local _, ok = nio.uv.fs_mkdir(vendor_dir, 493) -- 0755
+      if not ok then
+        error("Could not create directory " .. vendor_dir)
+      end
+    end
     local _, dir_stats = nio.uv.fs_stat(dir)
     if not dir_stats then
       local _, ok = nio.uv.fs_mkdir(dir, 493) -- 0755
