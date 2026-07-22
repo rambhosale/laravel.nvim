@@ -1,6 +1,5 @@
 local Class = require("laravel.utils.class")
 local nio = require("nio")
-local notify = require("laravel.utils.notify")
 
 local clean = vim.schedule_wrap(function(bufnr, namespace)
   vim.api.nvim_buf_clear_namespace(bufnr, namespace, 0, -1)
@@ -12,10 +11,12 @@ end)
 ---@field routes_loader laravel.loaders.routes_loader
 ---@field route_info_view table
 ---@field display_status table
+---@field log laravel.utils.log
 local route_info = Class({
   class = "laravel.services.class",
   routes_loader = "laravel.loaders.routes_loader",
   route_info_view = "laravel.extensions.route_info.view_factory",
+  log = "laravel.utils.log",
 }, {
   display_status = {},
 })
@@ -50,13 +51,13 @@ function route_info:handle(bufnr)
     local class, err = self.class:get(bufnr)
     if err then
       clean(bufnr, namespace)
-      notify.error("Could not get class for buffer: " .. err:toString())
+      self.log:debug("Could not get class for buffer: " .. err:toString())
       return
     end
     local routes, err = self.routes_loader:load()
     if err then
       clean(bufnr, namespace)
-      notify.error("Could not load routes: " .. err:toString())
+      self.log:debug("Could not load routes: " .. err:toString())
       return
     end
 

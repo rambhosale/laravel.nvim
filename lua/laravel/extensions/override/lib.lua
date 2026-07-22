@@ -1,14 +1,15 @@
 local Class = require("laravel.utils.class")
-local notify = require("laravel.utils.notify")
 local nio = require("nio")
 
 ---@class laravel.extensions.override.lib
 ---@field code laravel.services.code
 ---@field class laravel.services.class
 ---@field sign_name string
+---@field log laravel.utils.log
 local override = Class({
   code = "laravel.services.code",
   class = "laravel.services.class",
+  log = "laravel.utils.log",
 }, function(instance)
   instance.sign_name = "LaravelOverride"
 
@@ -43,7 +44,7 @@ function override:handle(bufnr)
     ))
 
     if err then
-      return notify.error("Error getting methods: " .. err:toString())
+      return self.log:debug("Error getting methods: " .. err:toString())
     end
 
     nio.fn.sign_placelist(vim

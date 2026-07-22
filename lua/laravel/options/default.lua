@@ -13,7 +13,7 @@
 ---@field user_commands table
 ---@field resources table
 return {
-  debug_level = vim.log.levels.DEBUG,
+  debug_level = vim.log.levels.WARN,
   features = {
     pickers = {
       enable = true,

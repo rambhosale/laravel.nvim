@@ -1,20 +1,13 @@
 local nio = require("nio")
-local notify = require("laravel.utils.notify")
+local Class  = require("laravel.utils.class")
 
 ---@class laravel.extensions.composer_info.lib
 ---@field composer laravel.services.composer
-local composer_info = {}
-
----@param composer laravel.services.composer
-function composer_info:new(composer)
-  local instance = {
-    composer = composer,
-  }
-  setmetatable(instance, self)
-  self.__index = self
-
-  return instance
-end
+---@field log laravel.utils.log
+local composer_info = Class({
+  composer = "laravel.services.composer",
+  log = "laravel.utils.log",
+})
 
 function composer_info:handle(bufnr)
   local ns = vim.api.nvim_create_namespace("composer-deps")
@@ -22,13 +15,13 @@ function composer_info:handle(bufnr)
     local infos, err = self.composer:info()
     if err then
       nio.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-      notify.error("Could not get composer info: " .. err:toString())
+      self.log:debug("Could not get composer info: " .. err:toString())
       return
     end
     local outdates, err = self.composer:outdated()
     if err then
       nio.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
-      notify.error("Could not get composer outdated: " .. err:toString())
+      self.log:debug("Could not get composer outdated: " .. err:toString())
       return
     end
 
@@ -38,7 +31,7 @@ function composer_info:handle(bufnr)
     nio.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
     local dependencies, err = self.composer:dependencies(bufnr)
     if err then
-      notify.error("Could not get composer dependencies: " .. err:toString())
+      self.log:debug("Could not get composer dependencies: " .. err:toString())
       return
     end
     for _, dep in ipairs(dependencies) do

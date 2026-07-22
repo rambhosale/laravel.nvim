@@ -18,7 +18,7 @@ local level_text = {
 function Log:new(path, level)
   local instance = {
     path = path,
-    level = level or vim.log.levels.DEBUG,
+    level = level or vim.log.levels.WARN,
   }
   setmetatable(instance, self)
   self.__index = self
@@ -27,10 +27,16 @@ end
 
 --- Write a log entry to the file
 ---@param level vim.log.levels
----@param message string: The log message
+---@param message any
 Log.write = nio.create(function(self, level, message)
   if level < self.level then
     return
+  end
+
+  if type(message) == "table" and message.toString then
+    message =  message:toString()
+  else
+    message = vim.inspect(message)
   end
 
   local entry = string.format("[%s] %s: %s\n", os.date("%Y-%m-%d %H:%M:%S"), level_text[level], message)
@@ -53,30 +59,27 @@ Log.write = nio.create(function(self, level, message)
 end, 3)
 
 --- Log a debug message
----@param message string: The debug message
+---@param message any
 function Log:debug(message)
   self:write(vim.log.levels.DEBUG, message)
 end
 
 --- Log an info message
--- @param message string: The info message
+---@param message any
 function Log:info(message)
   self:write(vim.log.levels.INFO, message)
 end
 
 --- Log a warning message
----@param message string: The warning message
+---@param message any
 function Log:warning(message)
   self:write(vim.log.levels.WARN, message)
 end
 
 --- Log an error message
----@param message string|laravel.utils.error: The error message or error instance
+---@param message any
 function Log:error(message)
-  if type(message) == "table" and message.toString then
-    message = message:toString()
-  end
-  self:write(vim.log.levels.ERROR, message)
+    self:write(vim.log.levels.ERROR, message)
 end
 
 return Log

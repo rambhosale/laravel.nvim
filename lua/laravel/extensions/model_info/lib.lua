@@ -10,9 +10,11 @@ end)
 ---@field view LaravelModelInfoView
 ---@field namespace integer
 ---@field display_status table<string, boolean>
+---@field log laravel.utils.log
 local model_info = Class({
   model_service = "laravel.services.model",
   view = "laravel.extensions.model_info.view",
+  log = "laravel.utils.log",
 }, {
   namespace = vim.api.nvim_create_namespace("laravel.model"),
   display_status = {},
@@ -24,6 +26,7 @@ function model_info:handle(bufnr)
 
     if err then
       nio.api.nvim_buf_clear_namespace(bufnr, self.namespace, 0, -1)
+      self.log:debug("Could not get the model " .. err:toString())
       return
     end
 

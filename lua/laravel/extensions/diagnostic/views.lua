@@ -1,6 +1,5 @@
 local nio = require("nio")
 local Class = require("laravel.utils.class")
-local notify = require("laravel.utils.notify")
 local Error = require("laravel.utils.error")
 
 ---@class laravel.extensions.diagnostic.views_diagnostic
@@ -18,18 +17,18 @@ function views_diagnostic:handle(bufnr)
 
   local php_parser = vim.treesitter.get_parser(bufnr, "php")
   if not php_parser then
-    notify.error("Could not get treesitter parser for PHP. Make sure you have the PHP parser installed.")
+    self.log:error("Could not get treesitter parser for PHP. Make sure you have the PHP parser installed.")
     return
   end
   local tree = php_parser:parse()[1]
   if tree == nil then
-    notify.error("Could not parse the PHP file. Make sure the file is a valid PHP file.")
+    self.log:error("Could not parse the PHP file. Make sure the file is a valid PHP file.")
     return
   end
   local query = vim.treesitter.query.get("php", "laravel_views")
 
   if not query then
-    notify.error(
+    self.log:error(
       "Could not get treesitter query for Laravel views. Make sure you have the Laravel views query installed."
     )
     return
@@ -55,7 +54,7 @@ function views_diagnostic:handle(bufnr)
     local views, err = self.views_loader:load()
 
     if err then
-      self.log:error(Error:new("Could not load views"):wrap(err))
+      self.log:debug(Error:new("Could not load views"):wrap(err))
       return
     end
 
