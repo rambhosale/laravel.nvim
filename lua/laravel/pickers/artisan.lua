@@ -2,10 +2,10 @@ local Class = require("laravel.utils.class")
 local notify = require("laravel.utils.notify")
 
 ---@class laravel.pickers.artisan
----@field commands_loader laravel.loaders.artisan_cache_loader
+---@field commands_loader laravel.loaders.artisan_loader
 ---@field log laravel.utils.log
 local artisan_picker = Class({
-  commands_loader = "laravel.loaders.artisan_cache_loader",
+  commands_loader = "laravel.loaders.artisan_loader",
   log = "laravel.utils.log",
 })
 

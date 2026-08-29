@@ -17,6 +17,8 @@ function laravel_provider.register(app)
   app:singletonIf("laravel.services.path")
 
   app:singleton("laravel.loaders.models_loader")
+  app:singleton("laravel.loaders.routes_loader")
+  app:singleton("laravel.loaders.artisan_loader")
   app:singleton("laravel.loaders.paths_loader")
   app:singleton("laravel.loaders.configs_loader")
 

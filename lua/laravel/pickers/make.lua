@@ -3,7 +3,7 @@ local notify = require("laravel.utils.notify")
 local is_make_command = require("laravel.utils.init").is_make_command
 
 local make_picker = Class({
-  commands_loader = "laravel.loaders.artisan_cache_loader",
+  commands_loader = "laravel.loaders.artisan_loader",
   log = "laravel.utils.log",
 })
 

@@ -4,8 +4,8 @@ local M = {}
 
 ---@async
 function M.complete(value)
-  ---@type laravel.loaders.artisan_cache_loader
-  local loaders = app("laravel.loaders.artisan_cache_loader")
+  ---@type laravel.loaders.artisan_loader
+  local loaders = app("laravel.loaders.artisan_loader")
   local commands, err = loaders:load()
   if err then
     return {}

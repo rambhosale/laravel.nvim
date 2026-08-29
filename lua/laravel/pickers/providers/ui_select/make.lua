@@ -5,9 +5,9 @@ local nio = require("nio")
 local notify = require("laravel.utils.notify")
 
 ---@class laravel.pickers.ui.make
----@field artisan_loader laravel.loaders.artisan_cache_loader
+---@field artisan_loader laravel.loaders.artisan_loader
 local make_picker = Class({
-  artisan_loader = "laravel.loaders.artisan_cache_loader",
+  artisan_loader = "laravel.loaders.artisan_loader",
 })
 
 function make_picker:run()
