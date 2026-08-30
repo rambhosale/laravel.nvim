@@ -20,7 +20,9 @@ function TermCommand:execute()
   })
 
   -- hide window (background)
-  vim.api.nvim_win_hide(win)
+  vim.schedule(function()
+    vim.api.nvim_win_hide(win)
+  end)
 end
 
 return TermCommand
